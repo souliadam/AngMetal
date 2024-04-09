@@ -1,0 +1,56 @@
+server:
+  port: 8083
+  
+spring:
+  application:
+    name: API_GATEWAY
+    
+    
+  cloud:
+    gateway:
+      routes:
+      - id: EventService
+        uri:
+          lb://EventService
+        predicates:
+        - Path=/event/**
+      - id: ReunionService
+        uri:
+          lb://ReunionService
+        predicates:
+          - Path=/Reunion/**
+      - id: PortfolioService
+        uri:
+          lb://PortfolioService
+        predicates:
+          - Path=/portfolio/**
+      - id: CRMService
+        uri:
+          lb://CRMService
+        predicates:
+          - Path=/crm/**
+      - id: PostService
+        uri:
+          lb://PostService
+        predicates:
+          - Path=/post/**
+      - id: CommentaireService
+        uri:
+          lb://CommentaireService
+        predicates:
+          - Path=/commentaire/**
+      - id: PrestationService
+        uri:
+          lb://PrestationService
+        predicates:
+          - Path=/prestation/**
+      - id: AIService
+        uri:
+          lb://AIService
+        predicates:
+          - Path=/ai/**
+      - id: RelationService
+        uri:
+          lb://RelationService
+        predicates:
+          - Path=/relation/**

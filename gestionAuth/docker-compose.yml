@@ -1,0 +1,125 @@
+version: '3'
+services:
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=Bizmatch
+    volumes:
+      - BizmatchVolume:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  eureka:
+    build:
+      context: ..\EurekaServer
+      dockerfile: DockerFileEureka
+    image: eureka-image
+    restart: always
+    container_name: eureka
+    ports:
+      - "8761:8761"
+
+  gateway:
+    build:
+      context: ..\API_Gateway
+      dockerfile: DockerFileGateway
+    container_name: gateway
+    image: api-gateway-image
+    restart: always
+    depends_on:
+      - eureka
+    ports:
+      - "8083:8083"
+
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka:8761/eureka
+      - eureka.instance.preferIpAddress=true
+      - eureka.instance.leaseRenewalIntervalInSeconds=10
+      - eureka.instance.leaseExpirationDurationInSeconds=30
+      - spring.cloud.gateway.routes[0].id=prestationservice
+      - spring.cloud.gateway.routes[0].uri=http://prestationservice:9001
+      - spring.cloud.gateway.routes[0].predicates[0]=Path=/prestationservice/**
+      #EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://host.docker.internal:8761/eureka
+      #jdbc:mysql://mysqldb/host.docker.internal/Bizmatch?autoReconnect=true&useSSL=false
+
+
+  prestationservice:
+    build:
+      context: ../prestationServiceMs
+      dockerfile: DockerFilePrestationService
+    container_name: prestationservice
+    image: prestationserviceimage
+    restart: always
+    ports:
+      - "9590:9590"
+    depends_on:
+      - mysql
+      - eureka
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka:8761/eureka
+      - eureka.instance.preferIpAddress=true
+      - eureka.instance.leaseRenewalIntervalInSeconds=10
+      - eureka.instance.leaseExpirationDurationInSeconds=30
+      - spring.datasource.url=jdbc:mysql://mysql:3306/Bizmatch?createDatabaseIfNotExists=true&autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false
+      - spring.datasource.username=root
+      - spring.datasource.password=root
+      - spring.jpa.show-sql=true
+      - spring.jpa.hibernate.ddl-auto=update
+      - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+      - spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+
+  gestionEvenement_conference:
+    build:
+      context: ../BizMatch_GestionEvenement_Conference
+      dockerfile: DockerFileEvent
+    container_name: eventContainer
+    image: event-conference
+    restart: always
+    ports:
+      - "9093:9093"
+    depends_on:
+      - mysql
+      - eureka
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka:8761/eureka
+      - eureka.instance.preferIpAddress=true
+      - eureka.instance.leaseRenewalIntervalInSeconds=10
+      - eureka.instance.leaseExpirationDurationInSeconds=30
+      - spring.datasource.url=jdbc:mysql://mysql:3306/Bizmatch?createDatabaseIfNotExists=true&autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false
+      - spring.datasource.username=root
+      - spring.datasource.password=root
+      - spring.jpa.show-sql=true
+      - spring.jpa.hibernate.ddl-auto=update
+      - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+      - spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+
+  gestionReunion:
+    build:
+      context: ../BizMatch_GestionReunion
+      dockerfile: DockerFileReunion
+    container_name: ReunionContainer
+    image: reunionimage
+    restart: always
+    ports:
+      - "9094:9094"
+    depends_on:
+      - mysql
+      - eureka
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka:8761/eureka
+      - eureka.instance.preferIpAddress=true
+      - eureka.instance.leaseRenewalIntervalInSeconds=10
+      - eureka.instance.leaseExpirationDurationInSeconds=30
+      - spring.datasource.url=jdbc:mysql://mysql:3306/Bizmatch?createDatabaseIfNotExists=true&autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false
+      - spring.datasource.username=root
+      - spring.datasource.password=root
+      - spring.jpa.show-sql=true
+      - spring.jpa.hibernate.ddl-auto=update
+      - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+      - spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+volumes:
+  BizmatchVolume:

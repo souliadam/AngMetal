@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/API_Gateway/API_Gateway.iml" filepath="$PROJECT_DIR$/API_Gateway/API_Gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/EurekaServer/EurekaServer2.iml" filepath="$PROJECT_DIR$/EurekaServer/EurekaServer2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/angMetal-back-main.iml" filepath="$PROJECT_DIR$/.idea/angMetal-back-main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gestionAuth/gestionAuth.iml" filepath="$PROJECT_DIR$/gestionAuth/gestionAuth.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gestionUser/gestionUser.iml" filepath="$PROJECT_DIR$/gestionUser/gestionUser.iml" />
+    </modules>
+  </component>
+</project>

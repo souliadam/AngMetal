@@ -1,0 +1,5 @@
+FROM openjdk:8-jdk-alpine
+WORKDIR /app/GestionUser
+COPY target/*.jar /app/GestionUser.jar
+EXPOSE 9099
+CMD ["java","-jar","/app/GestionUser.jar"]
