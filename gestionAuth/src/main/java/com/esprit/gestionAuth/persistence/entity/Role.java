@@ -6,7 +6,7 @@ import javax.persistence.Id;
 @Entity
 //@Table(name = "Role")
 public class Role {
-    //  -------------------farouk-------------------
+
 
     @Id
     private String roleName;

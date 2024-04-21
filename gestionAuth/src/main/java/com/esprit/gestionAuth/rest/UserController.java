@@ -4,7 +4,6 @@ import com.esprit.gestionAuth.persistence.entity.*;
 import com.esprit.gestionAuth.repositories.UserRepository;
 import com.esprit.gestionAuth.services.Implementation.EmailServiceImpl;
 import com.esprit.gestionAuth.services.Implementation.UserService;
-import com.esprit.gestionAuth.services.Implementation.VerificationTokenService;
 import com.esprit.gestionAuth.util.UserCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,111 +19,80 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @RestController
 @RequestMapping("/auth")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+  @Autowired
+  private UserService userService;
 
-    @Autowired
-    private UserRepository userDao;
-    @Autowired
-    private EmailServiceImpl emailServ;
+  @Autowired
+  private UserRepository userDao;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private VerificationTokenService verificationTokenService;
+  @Autowired
+  private EmailServiceImpl emailServ;
 
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
-    @GetMapping({"/hello"})
-    public String hello() {
-        return ("hello auth service");
-    }
+  @GetMapping("/hello")
+  public String hello() {
+    return "Hello auth service";
+  }
 
+  @PutMapping("/updateUser/{username}")
+  public User updateUser(@PathVariable String username, @RequestBody User userDetails) {
+    return userService.updateUser(username, userDetails);
+  }
 
-    @PutMapping("/updateUser/{username}")
-    public User updateUser(@PathVariable String username , @RequestBody User userDetails) {
+  @PostConstruct
+  public void initRoleAndUser() {
+    userService.initRoleAndUser();
+  }
 
-            return userService.updateUser(username,userDetails);
+  @PostMapping("/registerNewUser")
+  public User registerNewUser(@Valid @RequestBody User user) {
+    User savedUser = userService.registerNewUser(user);
+    return savedUser;
+  }
 
-    }
+  @DeleteMapping("/delete/{userName}")
+  public void delete(@PathVariable String userName) {
+    userService.delete(userName);
+  }
 
-    @PostConstruct
-    public void initRoleAndUser() {
-        userService.initRoleAndUser();
-    }
+  @GetMapping("/count")
+  public long count() {
+    return userService.count();
+  }
 
-    @PostMapping({"/registerNewUser"})
-    public User registerNewUser(@Valid @RequestBody User user) {
-        //user.setVerificationToken(verificationTokenService.generateVerificationToken());
+  @GetMapping("/countoperateur")
+  public long countoperateur() {
+    return userService.countoperateur();
+  }
 
-        User savedUser = userService.registerNewUser(user);
-        VerificationToken verificationToken = verificationTokenService.createVerificationToken(user); // création du jeton de vérification
-        verificationTokenService.saveVerificationToken(verificationToken);
+  @GetMapping("/countadmin")
+  public long countadmin() {
+    return userService.countadmin();
+  }
 
+  @GetMapping("/countusers")
+  public long countusers() {
+    return userService.countusers();
+  }
 
-        // Logging whether a user was found
+  @GetMapping("/sms/{userName}")
+  public void SMS(@PathVariable String userName) {
+    userService.sms(userName);
+  }
 
-        return savedUser;
-    }
-
-    @GetMapping({"/forAdmin"})
-    @PreAuthorize("hasRole('Admin')")
-    public String forAdmin() {
-        return "This URL is only accessible to the admin";
-    }
-
-
-    @GetMapping({"/forUser"})
-    @PreAuthorize("hasRole('User')")
-    public String forUser() {
-        return "This URL is only accessible to the user";
-    }
-
-    @DeleteMapping({"/delete/{userName}"})
-    @PreAuthorize("hasRole('Admin')")
-    public void delete(@PathVariable String userName) {
-        userService.delete(userName);
-    }
-
-    @GetMapping("/count")
-    @PreAuthorize("hasRole('Admin')")
-    public long count() {
-        return userService.count();
-    }
-
-    @GetMapping("/countoperateur")
-    @PreAuthorize("hasRole('Admin')")
-    public long countoperateur() {
-        return userService.countoperateur();
-    }
-
-    @GetMapping("/countadmin")
-    @PreAuthorize("hasRole('Admin')")
-    public long countadmin() {
-        return userService.countadmin();
-    }
-
-    @GetMapping("/countusers")
-    @PreAuthorize("hasRole('Admin')")
-    public long countusers() {
-        return userService.countusers();
-    }
-
-    @GetMapping({"/sms/{userName}"})
-    public void SMS(@PathVariable String userName) {
-        userService.sms(userName);
-    }
-
-    @PutMapping({"/addRole/{roleName}/{userName}"})
-    @PreAuthorize("hasRole('Admin')")
-    public void addRoleToUser(@PathVariable String roleName, @PathVariable String userName) {
-        userService.addRoleToUser(roleName, userName);
+  @PutMapping("/addRole/{roleName}/{userName}")
+  public void addRoleToUser(@PathVariable String roleName, @PathVariable String userName) {
+    userService.addRoleToUser(roleName, userName);
+  }
 
 
-    }
     //activate compte
     /*
     @PutMapping("/activate/{verificationToken}")

@@ -1,5 +1,6 @@
 package com.esprit.gestionAuth.repositories;
 
+
 import com.esprit.gestionAuth.persistence.entity.VerificationToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

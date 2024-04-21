@@ -19,6 +19,7 @@ import java.util.Set;
 @Service
 @Slf4j
 public class UserService {
+
     @Autowired
     private UserRepository userDao;
 
@@ -27,6 +28,7 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private EmailServiceImpl emailServ;
 
@@ -64,10 +66,10 @@ public class UserService {
         roleDao.save(userRole);
 
         User adminUser = new User();
-        adminUser.setUserName("adminBizmatch");
+        adminUser.setUserName("angMetal");
         adminUser.setUserPassword(getEncodedPassword("adminadmin"));
-        adminUser.setUserFirstName("Bizmatch");
-        adminUser.setUserLastName("admin");
+        adminUser.setUserFirstName("ang");
+        adminUser.setUserLastName("metal");
         Set<Role> adminRoles = new HashSet<>();
         adminRoles.add(adminRole);
         adminUser.setRole(adminRoles);
@@ -116,7 +118,7 @@ public class UserService {
 
     }
 
-    public User registerNewUser(User user) {
+  public User registerNewUser(User user) {
         Role role = roleDao.findById("User").get();
         Set<Role> userRoles = new HashSet<>();
         user.setIsverified(0);
@@ -129,7 +131,7 @@ public class UserService {
         return userDao.save(user);
     }
 
-    public String getEncodedPassword(String password) {
+  public String getEncodedPassword(String password) {
         return passwordEncoder.encode(password);
     }
 

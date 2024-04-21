@@ -16,7 +16,7 @@ public class MailConfiguration {
         mailSender.setPort(587);
         mailSender.setUsername("souliadam99@gmail.com\n");
 
-        mailSender.setPassword("cazanouva21300488");
+        mailSender.setPassword("itbhatdryoiltrxf");
 
 
 

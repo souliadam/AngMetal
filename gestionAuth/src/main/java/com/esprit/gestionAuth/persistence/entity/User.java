@@ -1,6 +1,6 @@
 package com.esprit.gestionAuth.persistence.entity;
 
-import com.esprit.gestionAuth.persistence.enumeration.Domaines;
+
 import com.esprit.gestionAuth.persistence.enumeration.RoleDemander;
 
 import javax.persistence.*;
@@ -28,8 +28,6 @@ public class User {
     private String userCode;
     @Email
     private String userEmail;
-    @Enumerated(EnumType.STRING)
-    private Domaines Domaines;
 
     @Enumerated(EnumType.STRING)
     private RoleDemander roleDemander;
@@ -41,13 +39,9 @@ public class User {
     public void setRoleDemander(RoleDemander roleDemander) {
         this.roleDemander = roleDemander;
     }
-    public com.esprit.gestionAuth.persistence.enumeration.Domaines getDomaines() {
-        return Domaines;
-    }
 
-    public void setDomaines(com.esprit.gestionAuth.persistence.enumeration.Domaines domaines) {
-        Domaines = domaines;
-    }
+
+
 
     public String getUserEmail() {
         return userEmail;

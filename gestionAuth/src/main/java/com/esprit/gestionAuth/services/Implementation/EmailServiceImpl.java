@@ -15,10 +15,12 @@ import javax.mail.internet.MimeMessage;
 
 @Service
 public class EmailServiceImpl implements IUserEmailRepository {
+
+  @Autowired
+  private VerificationTokenService verificationTokenService;
     @Autowired
     private JavaMailSender javaMailSender;
-    @Autowired
-    private VerificationTokenService verificationTokenService;
+
 
     @Override
     public void sendCodeByMail(UserMail mail) {
@@ -138,7 +140,6 @@ public class EmailServiceImpl implements IUserEmailRepository {
             e.printStackTrace();
         }
     }
-
 
 
     public void sendEmail(String to, String subject, String text) {
